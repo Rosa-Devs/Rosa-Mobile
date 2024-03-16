@@ -6,15 +6,15 @@ export interface NavProps {
     Title: string,
     Chat: boolean;
 
-    
+    OpenSettingFunc: () => void | null; 
 
 }
 
-const NavBar = () => {
+const NavBar = (props: NavProps) => {
     return (
         <View style={styles.navBar}>
             {/* Button 1 before text */}
-            <TouchableOpacity style={styles.buttonContainerRight} onPress={() => {}}>
+            <TouchableOpacity style={styles.buttonContainerRight} onPress={props.OpenSettingFunc}>
                 <Image source={require('../assets/icons/settings.png')} style={styles.icon} />
             </TouchableOpacity>
             <Text style={styles.navText}>Rosa</Text>
