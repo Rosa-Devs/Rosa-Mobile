@@ -2,7 +2,7 @@ import { models } from "../models/manifest";
 
 
 // Base URL of your API
-let baseURL = 'http://localhost:8867'; // Initialize baseURL as empty string
+let baseURL = 'http://localhost:8876'; // Initialize baseURL as empty string
 
 // let baseURL = 'http://localhost:8080'
 console.log(baseURL)
@@ -18,6 +18,7 @@ async function makeRequest(method: string, endpoint: string, data: any | null = 
 
   if (data) {
     requestOptions.body = JSON.stringify(data);
+    // console.log(requestOptions.body, data)
   }
 
   try {
@@ -38,7 +39,7 @@ export interface createNewAccountProps {
   avatar: string
 }
 export async function CreateNewAccount(props: createNewAccountProps): Promise<number | string> {
-  return makeRequest('POST', '/aunth/create');
+  return makeRequest('POST', '/aunth/create', props);
 }
 
 export async function Authorized(): Promise<boolean> {
@@ -50,14 +51,14 @@ export async function Trust(props: models.Message): Promise<number | string> {
 }
 
 // Channels Endpoints
-export interface createNewManifestProps {
-  name: string,
-  avatar: string,
+export interface CreateNewManifestProps {
+  name: string;
+  opts: string;
 }
 export interface ManifestResponse {
   manifest: string;
 }
-export async function CreateNewManifest(props: createNewManifestProps): Promise<ManifestResponse | string> {
+export async function CreateNewManifest(props: CreateNewManifestProps): Promise<ManifestResponse | string> {
   return makeRequest('POST', '/channel/create', props);
 }
 
@@ -88,4 +89,8 @@ export async function NewMessage(props: newMessageProps): Promise<number | strin
 
 export async function MessagesList(props: models.Manifest): Promise<models.Message[] | null> {
   return makeRequest('POST', '/message/list', props);
+}
+
+export async function Account(): Promise<models.ProfileStorePublic | string> {
+  return makeRequest('GET', '/aunth/account')
 }

@@ -1,6 +1,7 @@
 import { Image, TouchableOpacity, View, Text, FlatList, StyleSheet } from "react-native";
 import { models } from "../models/manifest";
 import { useNavigation, useTheme } from '@react-navigation/native';
+import Optional from "../models/optional";
 
 interface ChatProps {
   manifests: models.Manifest[];
@@ -10,29 +11,37 @@ interface ChatProps {
 const ChannelListGenerator: React.FC<ChatProps> = ({ manifests }) => {
   const { colors } = useTheme();
   const navigation = useNavigation();
+  // console.log(manifests)
   const renderManifestItem = ({ item }: { item: models.Manifest }) => {
     
     let optionalImage = null;
-
+    // console.log(item.optional.toString())
     if (item.optional) {
-      try {
-        // Parse the optional property to JSON
-        const optionalData = JSON.parse(item.optional);
+  try {
+    // Parse the optional property to JSON
+    const optionalData = JSON.parse(item.optional.toString());
 
-        // Access the Image property from the parsed optional data
-        const imageData = optionalData?.Image;
+    // Access the Image property from the parsed optional data
+    const imageData = optionalData?.Image;
 
-        if (imageData) {
-          // Decode the base64 string to a URI
-            const imageUri = `${imageData}`;
-            optionalImage = <Image source={{ uri: imageUri }} style={styles.image} />;
-        }
-      } catch (error) {
-            optionalImage = <Image source={require('../assets/icons/user.png')} style={styles.image} />;
-            // console.error('Error parsing optional data:', error);
-      }
+    if (!imageData || imageData === "test") {
+      // Display user.png icon when Image property is "test"
+      optionalImage = <Image source={require('../assets/icons/user.png')} style={styles.image} />;
+    } else {
+      // Decode the base64 string to a URI
+      const imageUri = `${imageData}`;
+      optionalImage = <Image source={{ uri: imageUri }} style={styles.image} />;
     }
-    console.log(item)
+  } catch (error) {
+    // Display user.png icon when there's an error parsing the URI
+    optionalImage = <Image source={require('../assets/icons/user.png')} style={styles.image} />;
+    // console.error('Error parsing optional data:', error);
+  }
+} else {
+  // Display user.png icon when item.optional is null or undefined
+  optionalImage = <Image source={require('../assets/icons/user.png')} style={styles.image} />;
+}
+    // console.log(item)
     return (
         // @ts-ignore
         <TouchableOpacity style={{ backgroundColor: colors.card }} onPress={() => navigation.navigate('Chat',{ manifest: item })}>

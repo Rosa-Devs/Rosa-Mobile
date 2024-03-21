@@ -4,7 +4,7 @@ go 1.22.0
 
 toolchain go1.22.1
 
-require github.com/Rosa-Devs/core v0.1.8
+require github.com/Rosa-Devs/core v0.2.2
 
 require (
 	github.com/Rosa-Devs/Database v0.0.7 // indirect
